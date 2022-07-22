@@ -60,32 +60,3 @@ fun List<Drink>.mapToCache(): List<CacheCocktails> {
     }
 
 }
-
-fun List<Drink>.mapToCacheC(): List<CacheCocktails> {
-    return this.map { cocktails ->
-        CacheCocktails(
-            id = cocktails.idDrink?:"",
-            strAlcoholic = cocktails.strAlcoholic?:"",
-            strCategory = cocktails.strCategory?:"",
-            strDrink = cocktails.strDrink?:"",
-            drinkThumb = cocktails.strDrinkThumb?:"",
-            strIngredient1 = cocktails.strIngredient1?:"",
-            strIngredient2 = cocktails.strIngredient2?:"",
-            strIngredient3 = cocktails.strIngredient3?:"",
-            strIngredient4 = cocktails.strIngredient4?:"",
-            strIngredient5 = cocktails.strIngredient5?:"",
-            strIngredient6 = cocktails.strIngredient6?:"",
-            strIngredient7 = cocktails.strIngredient7?:"",
-            strIngredient8 = cocktails.strIngredient8?:"",
-            strIngredient9 = cocktails.strIngredient9?:"",
-            strIngredient10 = cocktails.strIngredient10?:"",
-            strIngredient11 = cocktails.strIngredient11?:"",
-            strIngredient12 = cocktails.strIngredient12?:"",
-            strIngredient13 = cocktails.strIngredient13?:"",
-            strIngredient14 = cocktails.strIngredient14?:"",
-            strIngredient15 = cocktails.strIngredient15?:"",
-            strInstructions = cocktails.strInstructions?:"",
-        )
-    }
-
-}
