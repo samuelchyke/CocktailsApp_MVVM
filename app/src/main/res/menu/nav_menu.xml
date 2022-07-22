@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/nav_AZ"
+        android:title="A-Z"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/nav_A"
+        android:title="A"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_B"
+        android:title="B"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_C"
+        android:title="C"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_D"
+        android:title="D"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_E"
+        android:title="E"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_F"
+        android:title="F"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_G"
+        android:title="G"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_H"
+        android:title="H"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_I"
+        android:title="I"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_J"
+        android:title="J"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_K"
+        android:title="K"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_L"
+        android:title="L"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_M"
+        android:title="M"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_N"
+        android:title="N"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_O"
+        android:title="O"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_P"
+        android:title="P"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_Q"
+        android:title="Q"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_R"
+        android:title="R"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_S"
+        android:title="S"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_T"
+        android:title="T"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_U"
+        android:title="U"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_V"
+        android:title="V"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_W"
+        android:title="W"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_X"
+        android:title="X"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_Y"
+        android:title="Y"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_Z"
+        android:title="Z"
+        app:showAsAction="never" />
+
+</menu>
