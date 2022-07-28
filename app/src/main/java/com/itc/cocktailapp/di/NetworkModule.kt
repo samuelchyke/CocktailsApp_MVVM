@@ -18,15 +18,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
+    // CONVERT NETWORK RESPONSE T0 GSON KOTLIN OBJECT
     @Provides
     fun provideGson(): Gson = Gson()
 
+    // LOGS RETROFIT REQUESTS & RESPONSES
     @Provides
     fun loggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
 
+    // NETWORK CLIENT PERFORMS CACHING, REQUESTS & RESPONSES
     @Provides
     fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient =
         OkHttpClient.Builder()
@@ -36,6 +39,7 @@ class NetworkModule {
             .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
+    // CREATES A SINGLETON RETROFIT INSTANCE
     @Provides
     fun providesRetrofit(okHttpClient : OkHttpClient, gson: Gson): Retrofit =
         Retrofit.Builder()
@@ -44,6 +48,7 @@ class NetworkModule {
             .client(okHttpClient)
             .build()
 
+    // PROVIDES RETROFIT INSTANCE
     @Provides
     fun provideCocktailService(retrofit : Retrofit) : CocktailServiceApi =
         retrofit.create(CocktailServiceApi::class.java)

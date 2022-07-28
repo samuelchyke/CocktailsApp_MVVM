@@ -6,68 +6,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.itc.cocktailapp.R
 import com.itc.cocktailapp.databinding.FragmentCocktailsBinding
+import com.itc.cocktailapp.model.mapToCache
 import com.itc.cocktailapp.util.NetworkResult
 import kotlinx.coroutines.launch
 
 class CocktailsFragment : BaseFragment() {
 
-
     private val binding by lazy {
         FragmentCocktailsBinding.inflate(layoutInflater)
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        hasOptionsMenu()
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.nav_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-
-            R.id.nav_A -> switchCocktails("A")
-            R.id.nav_B -> switchCocktails("B")
-            R.id.nav_C -> switchCocktails("C")
-            R.id.nav_D -> switchCocktails("D")
-            R.id.nav_E -> switchCocktails("E")
-            R.id.nav_F -> switchCocktails("F")
-            R.id.nav_G -> switchCocktails("G")
-            R.id.nav_H -> switchCocktails("H")
-            R.id.nav_I -> switchCocktails("I")
-            R.id.nav_J -> switchCocktails("J")
-            R.id.nav_K -> switchCocktails("K")
-            R.id.nav_L -> switchCocktails("L")
-            R.id.nav_M -> switchCocktails("M")
-            R.id.nav_N -> switchCocktails("N")
-            R.id.nav_O -> switchCocktails("O")
-            R.id.nav_P -> switchCocktails("P")
-            R.id.nav_Q -> switchCocktails("Q")
-            R.id.nav_R -> switchCocktails("R")
-            R.id.nav_S -> switchCocktails("S")
-            R.id.nav_T -> switchCocktails("T")
-            R.id.nav_U -> switchCocktails("U")
-            R.id.nav_V -> switchCocktails("V")
-            R.id.nav_W -> switchCocktails("W")
-            R.id.nav_X -> switchCocktails("X")
-            R.id.nav_Y -> switchCocktails("Y")
-            R.id.nav_Z -> switchCocktails("Z")
-
-        }
-
-        return super.onOptionsItemSelected(item)
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         initRecyclerView()
-        switchCocktails("")
+        setCocktails("A")
         return binding.root
     }
 
@@ -83,10 +37,8 @@ class CocktailsFragment : BaseFragment() {
     private fun observeData(letter: String) {
         cocktailViewModel.cocktails.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is NetworkResult.Success<*> -> {
-                    response.data?.let {
-                        it.drinks?.let { drinks -> cocktailAdapter.setCocktails2(drinks) }
-                    }
+                is NetworkResult.Success -> {
+                    cocktailAdapter.differ.submitList(response.data?.drinks?.mapToCache())
                 }
                 is NetworkResult.Error -> {
                     response.message?.let { message ->
@@ -102,15 +54,54 @@ class CocktailsFragment : BaseFragment() {
         cocktailViewModel.searchCocktails(letter)
     }
 
-    private fun setRecyclerView(letter: String) {
-        lifecycleScope.launch {
-            cocktailAdapter.setCocktails(cocktailViewModel.getCocktailsFromDB(letter))
+    private fun setRecyclerViewUsingDB(letter: String) {
+        lifecycleScope.launch{
+            cocktailViewModel.getCocktailsFromDB(letter).observe(viewLifecycleOwner){
+                cocktailAdapter.differ.submitList(it)
+            }
         }
     }
 
-    private fun switchCocktails(letter: String) {
-        observeData(letter)
-        setRecyclerView(letter)
+    private fun setCocktails(letter: String) {
+        if(hasInternetConnection()) {
+            observeData(letter)
+        }else{
+            setRecyclerViewUsingDB(letter)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.nav_A -> {
+                setCocktails("A")
+            }
+            R.id.nav_B -> setCocktails("B")
+            R.id.nav_C -> setCocktails("C")
+            R.id.nav_D -> setCocktails("D")
+            R.id.nav_E -> setCocktails("E")
+            R.id.nav_F -> setCocktails("F")
+            R.id.nav_G -> setCocktails("G")
+            R.id.nav_H -> setCocktails("H")
+            R.id.nav_I -> setCocktails("I")
+            R.id.nav_J -> setCocktails("J")
+            R.id.nav_K -> setCocktails("K")
+            R.id.nav_L -> setCocktails("L")
+            R.id.nav_M -> setCocktails("M")
+            R.id.nav_N -> setCocktails("N")
+            R.id.nav_O -> setCocktails("O")
+            R.id.nav_P -> setCocktails("P")
+            R.id.nav_Q -> setCocktails("Q")
+            R.id.nav_R -> setCocktails("R")
+            R.id.nav_S -> setCocktails("S")
+            R.id.nav_T -> setCocktails("T")
+            R.id.nav_U -> setCocktails("U")
+            R.id.nav_V -> setCocktails("V")
+            R.id.nav_W -> setCocktails("W")
+            R.id.nav_X -> setCocktails("X")
+            R.id.nav_Y -> setCocktails("Y")
+            R.id.nav_Z -> setCocktails("Z")
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }

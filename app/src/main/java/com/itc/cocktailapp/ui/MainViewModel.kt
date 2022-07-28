@@ -19,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
@@ -37,9 +38,7 @@ class MainViewModel @Inject constructor(
         safeCallCocktailsFromNetwork(letter)
     }
 
-    suspend fun getCocktailsFromDB(letter: String): MutableList<CacheCocktails> {
-        return getSavedCocktailsFromDB(letter)
-    }
+    suspend fun getCocktailsFromDB(letter: String) = cacheCocktailRepository.getCocktailsFromDatabase(letter)
 
     private fun safeCallCocktailsFromNetwork(letter: String) =
         // RUN SCOPE ON MAIN THREAD
@@ -49,13 +48,20 @@ class MainViewModel @Inject constructor(
                 //CHECK FOR NETWORK CONNECTIVITY
                 if (hasInternetConnection()) {
                     // NETWORK CONNECTED : MAKE NETWORK CALL
-                    val response = cocktailRepository.getCocktails(letter)
+                    var response = cocktailRepository.getCocktails(letter)
                     _cocktails.postValue(handleCocktailsResponse(response))
-                    // SAVE RESULTS TO DATABASE
-                    saveCocktailsToDB(response.body()?.drinks)
+                    // SAVE RESULTS TO DATABASE IF DRINKS IS NOT NULL
+                    response.body()?.let {
+                        it.drinks?.let{
+                            saveCocktailsToDB(response.body()!!.drinks)
+                        } ?: let {
+                            response = cocktailRepository.getCocktails(letter)
+                            _cocktails.postValue(handleCocktailsResponse(response))
+                        }
+                    }
                 } else {
                     //NO NETWORK : GET COCKTAILS FROM DATABASE
-                    getSavedCocktailsFromDB(letter)
+                    getCocktailsFromDB(letter)
                 }
             } catch (t: Throwable) {
                 when (t) {
@@ -70,40 +76,32 @@ class MainViewModel @Inject constructor(
         cacheCocktailRepository.insertCocktailsToDatabase(convert)
     }
 
-    private suspend fun getSavedCocktailsFromDB(letter: String): MutableList<CacheCocktails> {
-        val cocktails: MutableList<CacheCocktails> = mutableListOf()
-        CoroutineScope(IO).launch {
-            cocktails.clear()
-            cocktails.addAll(cacheCocktailRepository.getCocktailsFromDatabase(letter))
-        }
-        return cocktails
-    }
-
-    //CHECK IF CONNECTED TO INTERNET
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = getApplication(context).getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities =
-            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capabilities.hasTransport(TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
-    }
-
-    //CONVERT RETROFIT RESPONSE OBJECT TO GENERIC DATA HANDLER (NETWORK RESULT)
-    private fun handleCocktailsResponse(response: Response<Cocktails>): NetworkResult<Cocktails> {
-        if (response.isSuccessful) {
-            response.body()?.let { responseResult ->
-                return NetworkResult.Success(responseResult)
+        //CHECK IF CONNECTED TO INTERNET
+        private fun hasInternetConnection(): Boolean {
+            val connectivityManager = getApplication(context).getSystemService(
+                Context.CONNECTIVITY_SERVICE
+            ) as ConnectivityManager
+            val activeNetwork = connectivityManager.activeNetwork ?: return false
+            val capabilities =
+                connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+            return when {
+                capabilities.hasTransport(TRANSPORT_WIFI) -> true
+                capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
+                capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
+                else -> false
             }
         }
-        return NetworkResult.Error(response.message())
+
+        //CONVERT RETROFIT RESPONSE OBJECT TO GENERIC DATA HANDLER (NETWORK RESULT)
+        private fun handleCocktailsResponse(response: Response<Cocktails>): NetworkResult<Cocktails> {
+            if (response.isSuccessful) {
+                response.body()?.let { responseResult ->
+                    return NetworkResult.Success(responseResult)
+                }
+            }
+            return NetworkResult.Error(response.message())
+        }
     }
-}
+
 
 

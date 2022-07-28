@@ -1,6 +1,7 @@
 package com.itc.cocktailapp.cache
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.itc.cocktailapp.model.CacheCocktails
 import com.itc.cocktailapp.model.Cocktails
@@ -18,5 +19,5 @@ interface CocktailsDAO {
     fun readAll(): List<CacheCocktails>
 
     @Query("SELECT * FROM cocktails_table WHERE strDrink LIKE  :letter || '%' ")
-    fun getCocktails(letter: String): List<CacheCocktails>
+    fun getCocktails(letter: String): LiveData<List<CacheCocktails>>
 }
