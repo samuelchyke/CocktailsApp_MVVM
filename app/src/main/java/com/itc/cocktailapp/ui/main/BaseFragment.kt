@@ -29,15 +29,6 @@ open class BaseFragment(
         CocktailAdapter()
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.nav_menu, menu)
-    }
-
     protected fun showError(message: String) {
         AlertDialog.Builder(requireContext())
             .setTitle("Error")

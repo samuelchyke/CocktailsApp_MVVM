@@ -21,7 +21,7 @@ class CocktailsFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         initRecyclerView()
-        setCocktails("A")
+        setRecyclerViewUsingDB("")
         return binding.root
     }
 
@@ -54,13 +54,11 @@ class CocktailsFragment : BaseFragment() {
         cocktailViewModel.searchCocktails(letter)
     }
 
-    private fun setRecyclerViewUsingDB(letter: String) {
-        lifecycleScope.launch{
+    private fun setRecyclerViewUsingDB(letter: String) = lifecycleScope.launch{
             cocktailViewModel.getCocktailsFromDB(letter).observe(viewLifecycleOwner){
                 cocktailAdapter.differ.submitList(it)
             }
         }
-    }
 
     private fun setCocktails(letter: String) {
         if(hasInternetConnection()) {
@@ -69,12 +67,18 @@ class CocktailsFragment : BaseFragment() {
             setRecyclerViewUsingDB(letter)
         }
     }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.nav_menu, menu)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.nav_A -> {
-                setCocktails("A")
-            }
+            R.id.nav_A -> setCocktails("A")
             R.id.nav_B -> setCocktails("B")
             R.id.nav_C -> setCocktails("C")
             R.id.nav_D -> setCocktails("D")
