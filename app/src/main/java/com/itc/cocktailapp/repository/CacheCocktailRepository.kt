@@ -1,7 +1,6 @@
 package com.itc.cocktailapp.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.itc.cocktailapp.cache.CocktailsDAO
 import com.itc.cocktailapp.model.CacheCocktails
 import javax.inject.Inject

@@ -4,18 +4,12 @@ import android.app.AlertDialog
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.itc.cocktailapp.R
 import com.itc.cocktailapp.adapter.CocktailAdapter
 import com.itc.cocktailapp.ui.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.internal.Contexts
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @AndroidEntryPoint
 open class BaseFragment(

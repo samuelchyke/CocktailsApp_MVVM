@@ -41,6 +41,7 @@ class NetworkModule {
 
     // CREATES A SINGLETON RETROFIT INSTANCE
     @Provides
+    @Singleton
     fun providesRetrofit(okHttpClient : OkHttpClient, gson: Gson): Retrofit =
         Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -50,6 +51,7 @@ class NetworkModule {
 
     // PROVIDES RETROFIT INSTANCE
     @Provides
+    @Singleton
     fun provideCocktailService(retrofit : Retrofit) : CocktailServiceApi =
         retrofit.create(CocktailServiceApi::class.java)
 

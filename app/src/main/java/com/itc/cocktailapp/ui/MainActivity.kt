@@ -1,18 +1,13 @@
 package com.itc.cocktailapp.ui
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
+import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.itc.cocktailapp.R
 import com.itc.cocktailapp.databinding.ActivityMainBinding
-import com.itc.cocktailapp.ui.main.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

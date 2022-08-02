@@ -8,12 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.itc.cocktailapp.databinding.CocktailsRowViewBinding
 import com.itc.cocktailapp.model.CacheCocktails
-import com.itc.cocktailapp.model.Cocktails
-import com.itc.cocktailapp.model.Drink
-import com.itc.cocktailapp.model.mapToCache
 import com.itc.cocktailapp.ui.main.CocktailsFragmentDirections
 import com.squareup.picasso.Picasso
-import okhttp3.internal.notify
 
 class CocktailAdapter : RecyclerView.Adapter<MyViewHolder>() {
 

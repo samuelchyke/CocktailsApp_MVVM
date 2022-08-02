@@ -3,11 +3,12 @@ package com.itc.cocktailapp.ui
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
+import android.support.annotation.VisibleForTesting
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.itc.cocktailapp.model.CacheCocktails
 import com.itc.cocktailapp.model.Cocktails
 import com.itc.cocktailapp.model.Drink
 import com.itc.cocktailapp.model.mapToCache
@@ -17,10 +18,9 @@ import com.itc.cocktailapp.util.NetworkResult
 import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Dispatchers.Main
-import retrofit2.Response
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.IOException
 import javax.inject.Inject
 
@@ -31,6 +31,7 @@ class MainViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
+    @VisibleForTesting
     private val _cocktails: MutableLiveData<NetworkResult<Cocktails>> = MutableLiveData()
     val cocktails: LiveData<NetworkResult<Cocktails>> get() = _cocktails
 
@@ -38,7 +39,8 @@ class MainViewModel @Inject constructor(
         safeCallCocktailsFromNetwork(letter)
     }
 
-    suspend fun getCocktailsFromDB(letter: String) = cacheCocktailRepository.getCocktailsFromDatabase(letter)
+    suspend fun getCocktailsFromDB(letter: String) =
+        cacheCocktailRepository.getCocktailsFromDatabase(letter)
 
     private fun safeCallCocktailsFromNetwork(letter: String) =
         // RUN SCOPE ON MAIN THREAD
@@ -49,15 +51,14 @@ class MainViewModel @Inject constructor(
                 if (hasInternetConnection()) {
                     // NETWORK CONNECTED : MAKE NETWORK CALL
                     var response = cocktailRepository.getCocktails(letter)
-                    _cocktails.postValue(handleCocktailsResponse(response))
+                    _cocktails.postValue(response)
                     // SAVE RESULTS TO DATABASE IF DRINKS IS NOT NULL
-                    response.body()?.let {
-                        it.drinks?.let{
-                            saveCocktailsToDB(response.body()!!.drinks)
-                        } ?: let {
-                            response = cocktailRepository.getCocktails(letter)
-                            _cocktails.postValue(handleCocktailsResponse(response))
-                        }
+                    response.data?.drinks?.let {
+                        saveCocktailsToDataBase(it)
+                    } ?: let {
+                        Toast.makeText(context, "No results", Toast.LENGTH_SHORT).show()
+                        response = cocktailRepository.getCocktails("A")
+                        _cocktails.postValue(response)
                     }
                 } else {
                     //NO NETWORK : GET COCKTAILS FROM DATABASE
@@ -71,37 +72,30 @@ class MainViewModel @Inject constructor(
             }
         }
 
-    private fun saveCocktailsToDB(cocktails: List<Drink>?) = CoroutineScope(IO).launch {
-        val convert: List<CacheCocktails>? = cocktails?.mapToCache()
-        cacheCocktailRepository.insertCocktailsToDatabase(convert)
-    }
-
-        //CHECK IF CONNECTED TO INTERNET
-        private fun hasInternetConnection(): Boolean {
-            val connectivityManager = getApplication(context).getSystemService(
-                Context.CONNECTIVITY_SERVICE
-            ) as ConnectivityManager
-            val activeNetwork = connectivityManager.activeNetwork ?: return false
-            val capabilities =
-                connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-            return when {
-                capabilities.hasTransport(TRANSPORT_WIFI) -> true
-                capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
-                capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
-                else -> false
-            }
-        }
-
-        //CONVERT RETROFIT RESPONSE OBJECT TO GENERIC DATA HANDLER (NETWORK RESULT)
-        private fun handleCocktailsResponse(response: Response<Cocktails>): NetworkResult<Cocktails> {
-            if (response.isSuccessful) {
-                response.body()?.let { responseResult ->
-                    return NetworkResult.Success(responseResult)
-                }
-            }
-            return NetworkResult.Error(response.message())
+    private fun saveCocktailsToDataBase(cocktails: List<Drink>?) = viewModelScope.launch {
+        withContext(IO) {
+            val convert = cocktails?.mapToCache()
+            cacheCocktailRepository.insertCocktailsToDatabase(convert)
         }
     }
+
+    //CHECK IF CONNECTED TO INTERNET
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = getApplication(context).getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return when {
+            capabilities.hasTransport(TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    }
+}
+
 
 
 

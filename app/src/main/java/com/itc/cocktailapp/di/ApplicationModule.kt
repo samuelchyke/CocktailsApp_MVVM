@@ -1,17 +1,15 @@
 package com.itc.cocktailapp.di
 
-import android.app.Application;
-import android.content.Context;
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import androidx.room.Room
-
-import com.itc.cocktailapp.cache.CocktailDatabase;
+import com.itc.cocktailapp.cache.CocktailDatabase
 import com.itc.cocktailapp.cache.CocktailsDAO
-import com.itc.cocktailapp.model.Cocktails;
 import dagger.Module
-
-import dagger.Provides;
+import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.internal.Contexts
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
@@ -21,6 +19,7 @@ import javax.inject.Singleton
 class ApplicationModule {
 
     @Provides
+    @Singleton
     fun providesRoomDb(@ApplicationContext appContext:Context): CocktailDatabase = Room.databaseBuilder(
         appContext,
         CocktailDatabase::class.java,
@@ -29,7 +28,7 @@ class ApplicationModule {
     build()
 
     @Provides
+    @Singleton
     fun providesCocktailDAO(database:CocktailDatabase): CocktailsDAO =
         database.cocktailsDAO()
-
 }

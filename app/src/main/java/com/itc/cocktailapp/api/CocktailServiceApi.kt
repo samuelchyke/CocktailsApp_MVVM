@@ -1,7 +1,6 @@
 package com.itc.cocktailapp.api
 
 import com.itc.cocktailapp.model.Cocktails
-import com.itc.cocktailapp.util.NetworkResult
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
