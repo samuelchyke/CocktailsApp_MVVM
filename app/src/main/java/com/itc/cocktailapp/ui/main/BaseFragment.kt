@@ -12,16 +12,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.internal.Contexts
 
 @AndroidEntryPoint
-open class BaseFragment(
-) : Fragment() {
+open class BaseFragment : Fragment() {
 
     protected val cocktailViewModel by lazy{
         ViewModelProvider(requireActivity())[MainViewModel::class.java]
     }
 
-    protected val cocktailAdapter by lazy{
-        CocktailAdapter()
-    }
+    protected var cocktailAdapter =  CocktailAdapter()
 
     protected fun showError(message: String) {
         AlertDialog.Builder(requireContext())

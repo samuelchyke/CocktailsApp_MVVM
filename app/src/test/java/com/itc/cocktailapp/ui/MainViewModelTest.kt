@@ -11,7 +11,8 @@ import com.itc.cocktailapp.cache.CocktailsDAO
 import com.itc.cocktailapp.model.CacheCocktails
 import com.itc.cocktailapp.model.Cocktails
 import com.itc.cocktailapp.model.Drink
-import com.itc.cocktailapp.repository.*
+import com.itc.cocktailapp.repository.mocks.FakeCacheRepo
+import com.itc.cocktailapp.repository.mocks.FakeNetworkRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
@@ -60,15 +61,6 @@ class MainViewModelTest{
         db.close()
     }
 
-//    @Test
-//    fun searchApi() = runTest{
-//
-//        val a = api.getCocktails("A")
-//
-//        assertThat(a).isNotNull()
-//
-//    }
-
     @Test
     fun searchForCocktailsInNetwork() {
 
@@ -89,18 +81,6 @@ class MainViewModelTest{
             assertThat(it).isNotNull()
         }
 
-    }
-
-    @Test
-    fun `insert a cocktail into database _ cocktail` () {
-
-        val cocktail : CacheCocktails = createCocktail()
-
-        cocktailsDao.insertTestCocktail(cocktail)
-
-        val byName = cocktailsDao.getTestCocktail()
-
-        assertThat(byName).isEqualTo(cocktail)
     }
 
     private fun createCocktail(): CacheCocktails {

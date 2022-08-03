@@ -1,8 +1,9 @@
-package com.itc.cocktailapp.repository
+package com.itc.cocktailapp.repository.mocks
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.itc.cocktailapp.model.CacheCocktails
+import com.itc.cocktailapp.repository.CacheCocktailRepository
 
 class FakeCacheRepo: CacheCocktailRepository {
 

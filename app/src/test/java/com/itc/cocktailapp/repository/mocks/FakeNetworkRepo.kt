@@ -1,6 +1,7 @@
-package com.itc.cocktailapp.repository
+package com.itc.cocktailapp.repository.mocks
 
 import com.itc.cocktailapp.model.Cocktails
+import com.itc.cocktailapp.repository.CocktailRepository
 import com.itc.cocktailapp.util.NetworkResult
 
 class FakeNetworkRepo: CocktailRepository {

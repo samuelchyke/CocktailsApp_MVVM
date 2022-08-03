@@ -1,6 +1,5 @@
 package com.itc.cocktailapp.repository
 
-import androidx.lifecycle.LiveData
 import com.itc.cocktailapp.api.CocktailServiceApi
 import com.itc.cocktailapp.model.Cocktails
 import com.itc.cocktailapp.util.NetworkResult
