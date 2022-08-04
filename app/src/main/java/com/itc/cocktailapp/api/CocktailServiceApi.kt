@@ -10,7 +10,7 @@ interface CocktailServiceApi {
     @GET(COCKTAIL_PATH)
     suspend fun getCocktails(
         @Query("f") letter: String
-    ): Response<Cocktails>
+    ): Response<List<Cocktails>>
 
     companion object{
 

@@ -7,7 +7,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import com.itc.cocktailapp.cache.CocktailDatabase
 import com.itc.cocktailapp.cache.CocktailsDAO
-import com.itc.cocktailapp.getOrAwaitValue
 import com.itc.cocktailapp.model.CacheCocktails
 import kotlinx.coroutines.runBlocking
 import org.junit.After

@@ -47,22 +47,16 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             _cocktails.postValue(NetworkResult.Loading())
             try {
-                //CHECK FOR NETWORK CONNECTIVITY
-                if (hasInternetConnection()) {
-                    // NETWORK CONNECTED : MAKE NETWORK CALL
-                    var response = cocktailRepository.getCocktails(letter)
+                // NETWORK CONNECTED : MAKE NETWORK CALL
+                var response = cocktailRepository.getCocktails(letter)
+                _cocktails.postValue(response)
+                // SAVE RESULTS TO DATABASE IF DRINKS IS NOT NULL
+                response.data?.drinks?.let {
+                    saveCocktailsToDataBase(it)
+                } ?: let {
+                    Toast.makeText(context, "No results", Toast.LENGTH_SHORT).show()
+                    response = cocktailRepository.getCocktails("A")
                     _cocktails.postValue(response)
-                    // SAVE RESULTS TO DATABASE IF DRINKS IS NOT NULL
-                    response.data?.drinks?.let {
-                        saveCocktailsToDataBase(it)
-                    } ?: let {
-                        Toast.makeText(context, "No results", Toast.LENGTH_SHORT).show()
-                        response = cocktailRepository.getCocktails("A")
-                        _cocktails.postValue(response)
-                    }
-                } else {
-                    //NO NETWORK : GET COCKTAILS FROM DATABASE
-                    getCocktailsFromDB(letter)
                 }
             } catch (t: Throwable) {
                 when (t) {
@@ -79,21 +73,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    //CHECK IF CONNECTED TO INTERNET
-    private fun hasInternetConnection(): Boolean {
-        val connectivityManager = getApplication(context).getSystemService(
-            Context.CONNECTIVITY_SERVICE
-        ) as ConnectivityManager
-        val activeNetwork = connectivityManager.activeNetwork ?: return false
-        val capabilities =
-            connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
-        return when {
-            capabilities.hasTransport(TRANSPORT_WIFI) -> true
-            capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
-            capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
-            else -> false
-        }
-    }
 }
 
 

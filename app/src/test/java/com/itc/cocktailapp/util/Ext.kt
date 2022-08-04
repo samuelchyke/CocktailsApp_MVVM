@@ -1,4 +1,4 @@
-package com.itc.cocktailapp
+package com.itc.cocktailapp.util
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData

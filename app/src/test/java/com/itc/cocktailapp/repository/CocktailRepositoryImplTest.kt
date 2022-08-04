@@ -32,7 +32,7 @@ class CocktailRepositoryImplTest {
     @Test
     fun `get cocktails by letter _ cocktail with empty list of drinks`() {
         runBlocking {
-            Mockito.`when`(api.getCocktails("A")).thenReturn(Response.success(Cocktails(listOf())))
+            Mockito.`when`(api.getCocktails("A")).thenReturn(Response.success(listOf(Cocktails(listOf()))))
             val response = repository.getCocktails("A")
             assertThat(Cocktails(listOf())).isEqualTo((response.data))
         }

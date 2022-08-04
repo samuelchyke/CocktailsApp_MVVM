@@ -20,10 +20,10 @@ class CocktailRepositoryImpl @Inject constructor (
    }
 
    //CONVERT RETROFIT RESPONSE OBJECT TO GENERIC DATA HANDLER (NETWORK RESULT)
-   private fun handleCocktailsResponse(response: Response<Cocktails>): NetworkResult<Cocktails> {
+   private fun handleCocktailsResponse(response: Response<List<Cocktails>>): NetworkResult<Cocktails> {
       if (response.isSuccessful) {
          response.body()?.let { responseResult ->
-            return NetworkResult.Success(responseResult)
+            return NetworkResult.Success(responseResult.single())
          }
       }
       return NetworkResult.Error(response.message())

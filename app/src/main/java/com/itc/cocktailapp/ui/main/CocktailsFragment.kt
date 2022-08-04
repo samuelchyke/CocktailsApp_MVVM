@@ -44,6 +44,7 @@ class CocktailsFragment : BaseFragment() {
                     response.message?.let { message ->
                         showError(message)
                     }
+                    setRecyclerViewUsingDB(letter)
                 }
                 is NetworkResult.Loading -> {
 //                    showProgressBar()
