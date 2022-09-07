@@ -22,6 +22,8 @@ class DetailsFragment : BaseFragment() {
     ): View {
         // Inflate the layout for this fragment
 
+        args.currentCocktail
+
         binding.nameTextVw.text = args.currentCocktail.strDrink
         Picasso.get().load(args.currentCocktail.drinkThumb).fit().into(binding.bannerImgVw)
 

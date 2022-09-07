@@ -1,21 +1,18 @@
 package com.itc.cocktailapp.ui
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities.*
-import android.support.annotation.VisibleForTesting
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.common.annotations.VisibleForTesting
 import com.itc.cocktailapp.model.Cocktails
 import com.itc.cocktailapp.model.Drink
 import com.itc.cocktailapp.model.mapToCache
 import com.itc.cocktailapp.repository.CacheCocktailRepository
 import com.itc.cocktailapp.repository.CocktailRepository
 import com.itc.cocktailapp.util.NetworkResult
-import dagger.hilt.android.internal.Contexts.getApplication
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers.IO

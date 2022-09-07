@@ -13,10 +13,8 @@ interface CocktailServiceApi {
     ): Response<List<Cocktails>>
 
     companion object{
-
         const val BASE_URL = "https://www.thecocktaildb.com/"
         private const val COCKTAIL_PATH = "api/json/v1/1/search.php"
-
     }
 
 }
